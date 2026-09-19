@@ -12,17 +12,16 @@
         <ProjectReference Include="..\..\..\BepInEx.Core\BepInEx.Core.csproj" />
         <ProjectReference Include="..\..\..\BepInEx.Preloader.Core\BepInEx.Preloader.Core.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\BepInEx.Unity.Common\BepInEx.Unity.Common.csproj" />
+        <ProjectReference Include="..\..\..\External\Il2CppInterop\Il2CppInterop.Generator\Il2CppInterop.Generator.csproj" />
+        <ProjectReference Include="..\..\..\External\Il2CppInterop\Il2CppInterop.HarmonySupport\Il2CppInterop.HarmonySupport.csproj" />
+        <ProjectReference Include="..\..\..\External\Il2CppInterop\Il2CppInterop.Runtime\Il2CppInterop.Runtime.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="HarmonyX" Version="2.16.0" />
         <PackageReference Include="Iced" Version="1.21.0" />
-        <PackageReference Include="Il2CppInterop.Generator" Version="1.5.2-ci.star.12" />
-        <PackageReference Include="Il2CppInterop.HarmonySupport" Version="1.5.2-ci.star.12" />
         <PackageReference Include="Il2CppInterop.ReferenceLibs" Version="1.0.0" IncludeAssets="compile" PrivateAssets="all" />
-        <PackageReference Include="Il2CppInterop.Runtime" Version="1.5.2-ci.star.12" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-        <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.4-star" />
         <PackageReference Include="Samboy063.Cpp2IL.Core" Version="2022.1.0-development.1452" />
     </ItemGroup>
     <ItemGroup>
@@ -49,6 +48,34 @@
             <FilesToDelete Include="$(OutputPath)*.deps.json" />
         </ItemGroup>
         <Delete Files="@(FilesToDelete)" />
+    </Target>
+
+    <!-- Pack Android layout: config/, core/, plugins/ — same as BepInEx.Android.bak -->
+    <PropertyGroup>
+        <AndroidPackageDir>$(IntermediateOutputPath)android-package</AndroidPackageDir>
+        <AndroidPackageZip>$(BuildDir)/BepInEx.Android.zip</AndroidPackageZip>
+    </PropertyGroup>
+
+    <Target Name="PackAndroidDistribution" AfterTargets="DeleteSys">
+        <ItemGroup>
+            <_AndroidCore Include="$(OutputPath)*.dll" />
+            <_AndroidCore Include="$(OutputPath)BepInEx*.xml" />
+            <_AndroidCore Include="$(OutputPath)*.dll.config" />
+        </ItemGroup>
+
+        <RemoveDir Directories="$(AndroidPackageDir)" />
+        <MakeDir Directories="$(AndroidPackageDir)/config;$(AndroidPackageDir)/core;$(AndroidPackageDir)/plugins" />
+        <Copy SourceFiles="@(_AndroidCore)" DestinationFolder="$(AndroidPackageDir)/core" />
+        <Copy SourceFiles="$(MSBuildThisFileDirectory)dist\BepInEx.cfg"
+              DestinationFiles="$(AndroidPackageDir)/config/BepInEx.cfg" />
+        <Touch Files="$(AndroidPackageDir)/plugins/.keep" AlwaysCreate="true" />
+
+        <MakeDir Directories="$(BuildDir)" />
+        <Delete Files="$(AndroidPackageZip)" Condition="Exists('$(AndroidPackageZip)')" />
+        <ZipDirectory SourceDirectory="$(AndroidPackageDir)"
+                      DestinationFile="$(AndroidPackageZip)"
+                      Overwrite="true" />
+        <Message Importance="high" Text="Packed Android distribution: $(AndroidPackageZip)" />
     </Target>
 
 </Project>

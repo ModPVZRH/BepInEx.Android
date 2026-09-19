@@ -289,3 +289,6 @@ __pycache__/
 
 # Cake binaries
 tools/
+
+# Android zip staging directory (build output)
+**/android-package/
