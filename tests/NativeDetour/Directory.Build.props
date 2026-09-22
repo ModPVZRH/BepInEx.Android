@@ -1,0 +1,3 @@
+<Project>
+  <!-- Standalone harness: no runtime/game or NuGet dependencies. -->
+</Project>

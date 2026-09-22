@@ -1,6 +1,6 @@
 [submodule "External/Il2CppInterop"]
 	path = External/Il2CppInterop
-	url = https://github.com/All-Of-Us-Mods/Il2CppInterop.git
+	url = https://github.com/ModPVZRH/Il2CppInterop.git
 [submodule "External/MonoMod"]
 	path = External/MonoMod
-	url = https://github.com/All-Of-Us-Mods/MonoMod.git
+	url = https://github.com/ModPVZRH/MonoMod.git

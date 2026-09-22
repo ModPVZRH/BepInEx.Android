@@ -19,4 +19,8 @@ internal static unsafe partial class NextInterop
 
     [LibraryImport(LIBRARY_NAME)]
     public static unsafe partial void unhook(IntPtr target);
+
+    [LibraryImport(LIBRARY_NAME)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static unsafe partial bool unhook_checked(IntPtr target);
 }
